@@ -150,5 +150,8 @@ while (continuar == "si") :
     while (continuar != "si") and (continuar != "no"):
         continuar = input("La operacion ingresada no es valida. Desea continuar(SI/no): ")
         continuar = continuar.lower()
+        if (continuar == "si"):
+            Session=sessionmaker(bind=engine)
+            session=Session()
 print ("Gracias por usar nuestro sistema de escuela")
 exit()
