@@ -13,7 +13,7 @@ class Estudiante(Base):
     id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
     nombre_alumno=Column(String)
     apellido_alumno=Column(String)
-    curso_ida=Column(Integer,ForeignKey('curso.id'))
+    curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
     
     cursos=relationship("Curso",back_populates='estudiantes')
     def __repr__(self):
@@ -59,39 +59,96 @@ Base.metadata.create_all(engine)
 #########################################################################################
 
 ##############Definiciones de cada funcion################################
-def AgregarProfesor (Session sesion, Profesor profe):
-    if sesion:
-        #algo acá
-        session.commit()
-    else:
-        print("La sesión no está iniciada profesor")
+def estaProfesor():
+def estaAlumno():
+def estaCurso():
+
+
+def agregarProfesor (Session sesion, Profesor profe):
+    #acá tiene que chequear que el profesor no esté en la DB
 
 
 
 
-def AgregarAlumno(Session sesion, Estudiante alumno):
-    if sesion:
-        #algo acá
-        session.commit()
-    else:
-        print("La sesión no está iniciada estudiante")
+def agregarAlumno(Session sesion, Estudiante alumno):
+    #acá tiene que chequear que el profesor no esté en la DB
+
+def asignarAlumnoACurso():
+#algo aca
+
+def asignarProfesorACurso():
+#algo aca
+
+def asignarProfesorACurso():
+#algo aca
+
+def asignarHorarioProfCurso():
 
 
 
-
-def ExportarAlumnosPerteneceACurso(Session session):
+def exportarAlumnosPerteneceACurso(Session session):
     print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
     print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
-    #acá va un query
+
 ###############################################################################
 
+#############Funcion que despliega el menú##########################################################
+def impr_op_posibles():
+  print("Estas son las operaciones  que se pueden hacer")
+  print("1 - agregar alumno")
+  print("2 - agregar curso")
+  print("3 - agregar profesor")
+  print("4 - asignar un alumno a un curso")
+  print("5 - asignar un profesor a un curso")
+  print("6 - asignar un horario a un profesor de un curso")
+  print("7 - listar para cada curso, los alumnos y los profesores con sus horarios")
+  print("8 - salir")
+  
+print("Bienvenidos al sistema de escuela")
 
 
+#############Main#############################################################
 Session=sessionmaker(bind=engine)
 session=Session()
+continuar = "si"
+while (continuar == "si") :
+  impr_op_posibles() #imprime el menú
 
-
-
-
-
-
+###############Acá pide y chequea que lo que le estás dando es un numero#############################
+  try:
+    operacion= float(input("Introduce el numero de operacion que quieres realizar: "))
+  except ValueError:
+    print("no se reconoce esa operacion")
+    continue #Si lo que el usuario ingresa no es un número, imprime que no se reconoce la operacion y va al while
+  else:
+    if (operacion == 8):
+        continuar = "no"
+        session.close()
+    else:
+        if (operacion ==1):
+            agegarCurso()
+            continue
+        if (operacion ==2):
+            agregarProfesor()
+            continue
+        if (operacion ==3):
+            AsignarAlumnoACurso()
+            continue
+        if (operacion == 4):
+            asignarAlumnoACurso()
+            continue
+        if (operacion == 5):
+            asignarProfesorACurso()
+            continue
+        if (operacion == 6):
+            asignarHorarioProfCurso()
+            continue
+        if (operacion == 7):
+            exportarAlumnosPerteneceACurso(session):
+            continue
+###########Esto es para saber si desea continuar en el sistema#############################
+    while (continuar != "si") and (continuar != "no"):
+        continuar = input("La operacion ingresada no es valida. Desea continuar(SI/no): ")
+        continuar = continuar.lower()
+print ("Gracias por usar nuestro sistema de escuela")
+exit()
