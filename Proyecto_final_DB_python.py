@@ -59,7 +59,13 @@ Base.metadata.create_all(engine)
 #########################################################################################
 
 ##############Definiciones de cada funcion################################
-def AgregarProfesor ():
+def AgregarProfesor (Session sesion, Profesor profe):
+    if sesion:
+        #algo acá
+        session.commit()
+    else:
+        print("La sesión no está iniciada profesor")
+
 
 
 
@@ -67,11 +73,13 @@ def AgregarAlumno(Session sesion, Estudiante alumno):
     if sesion:
         #algo acá
         session.commit()
+    else:
+        print("La sesión no está iniciada estudiante")
 
 
 
 
-def ExportarAlumnosPerteneceACurso():
+def ExportarAlumnosPerteneceACurso(Session session):
     print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
     print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
     #acá va un query
@@ -84,6 +92,6 @@ session=Session()
 
 
 
-print(horario1.curso_profe)
+
 
 
