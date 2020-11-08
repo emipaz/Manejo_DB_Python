@@ -107,7 +107,7 @@ def impr_op_posibles():
 print("Bienvenidos al sistema de escuela")
 
 def ingresar_operacion():
-    opciones = 0
+    opcion = 0
     try:
         impr_op_posibles()
         opcion = int(input("Elije una opcion (con numeros)"))
