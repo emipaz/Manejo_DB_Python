@@ -106,51 +106,60 @@ def impr_op_posibles():
   
 print("Bienvenidos al sistema de escuela")
 
+def ingresar_operacion():
+    opciones = 0
+    try:
+        impr_op_posibles()
+        opcion = int(input("Elije una opcion (con numeros)"))
+
+        if opcion < 1 or opcion > 8:
+            print("ingresa un numero valido por favor")
+            ingresar_operacion()
+
+    except ValueError:
+        print("ingresa un numero valido por favor")
+        ingresar_operacion()
+
+    return opcion
+
+def realizar_operacion(operacion, session):
+    if (operacion == 8):
+        session.close()
+
+    if (operacion ==1):
+        agegarCurso()
+
+    if (operacion ==2):
+        agregarProfesor()
+
+    if (operacion ==3):
+        AsignarAlumnoACurso()
+
+    if (operacion == 4):
+        asignarAlumnoACurso()
+
+    if (operacion == 5):
+        asignarProfesorACurso()
+
+    if (operacion == 6):
+        asignarHorarioProfCurso()
+
+    if (operacion == 7):
+        exportarAlumnosPerteneceACurso(session):
+
+ 
 
 #############Main#############################################################
-Session=sessionmaker(bind=engine)
-session=Session()
-continuar = "si"
-while (continuar == "si") :
-  impr_op_posibles() #imprime el menú
+def main():
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-###############Acá pide y chequea que lo que le estás dando es un numero#############################
-  try:
-    operacion= float(input("Introduce el numero de operacion que quieres realizar: "))
-  except ValueError:
-    print("no se reconoce esa operacion")
-    continue #Si lo que el usuario ingresa no es un número, imprime que no se reconoce la operacion y va al while
-  else:
-    if (operacion == 8):
-        continuar = "no"
-        session.close()
-    else:
-        if (operacion ==1):
-            agegarCurso()
-            continue
-        if (operacion ==2):
-            agregarProfesor()
-            continue
-        if (operacion ==3):
-            AsignarAlumnoACurso()
-            continue
-        if (operacion == 4):
-            asignarAlumnoACurso()
-            continue
-        if (operacion == 5):
-            asignarProfesorACurso()
-            continue
-        if (operacion == 6):
-            asignarHorarioProfCurso()
-            continue
-        if (operacion == 7):
-            exportarAlumnosPerteneceACurso(session):
-            continue
-###########Esto es para saber si desea continuar en el sistema#############################
-    while (continuar != "si") and (continuar != "no"):
-        continuar = input("La operacion ingresada no es valida. Desea continuar(SI/no): ")
-        continuar = continuar.lower()
-        if (continuar == "no"):
-            session.close()
-print ("Gracias por usar nuestro sistema de escuela")
-exit()
+    operacion = 0
+    while operacion != 8:
+        operacion = ingresar_operacion()
+        realizar_operacion(opcion, session)
+
+    print ("Gracias por usar nuestro sistema de escuela")
+
+if __name__ == '__main__':
+    main()
