@@ -11,7 +11,6 @@ Base=declarative_base(engine)
 class Estudiante(Base):
     __tablename__="alumno"   
     id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
-    CI=Column(Integer, primary_key=True)
     nombre_alumno=Column(String)
     apellido_alumno=Column(String)
     curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
@@ -48,7 +47,6 @@ class Horarios(Base):
 class Profesor(Base):
     __tablename__='profesor'
     id=Column(Integer, Sequence('profesor_seq_id'),primary_key=True)
-    CI=Column(Integer, primary_key=True)    
     nombre_profesor=Column(String)
     apellido_profesor=Column(String)
     
@@ -61,44 +59,36 @@ Base.metadata.create_all(engine)
 #########################################################################################
 
 ##############Definiciones de cada funcion################################
-def estaProfesor(Session ses, Profesor prof):
-    return prof.CI == ses.query(Profesor, Profesor.CI).any()
-    
-def estaAlumno(Session ses, Estudiante estud):
-    return estud.CI == ses.query(Estudiante, Estudiante.CI).any()
-    
-    
-def estaCurso(Session ses, Curso curso):
-    return curso.id == ses.query(Curso,Curso.id).any()
+def estaProfesor():
+def estaAlumno():
+def estaCurso():
 
 
-def agregarProfesor ():
+def agregarProfesor (Session sesion, Profesor profe):
     #acá tiene que chequear que el profesor no esté en la DB
-    print ("Agregar Profesor")
 
-def agregarCurso():
-    print("agregar curso")
 
-def agregarAlumno():
+
+
+def agregarAlumno(Session sesion, Estudiante alumno):
     #acá tiene que chequear que el profesor no esté en la DB
-    print ("Agregar Estudiante")
 
 def asignarAlumnoACurso():
 #algo aca
-    print("Asignar estudiante a curso")
 
 def asignarProfesorACurso():
-    print("Asignar profesor a curso")
+#algo aca
+
+def asignarProfesorACurso():
 #algo aca
 
 def asignarHorarioProfCurso():
-    return None
 
 
-def exportarAlumnosPerteneceACurso():
-    print ("Exportar alumnos pertenecientes a curso")
-#    print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
-#    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
+
+def exportarAlumnosPerteneceACurso(Session session):
+    print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
+    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
 
 ###############################################################################
 
@@ -123,9 +113,7 @@ def ingresar_operacion():
         opcion = int(input("Elije una opcion (con numeros)"))
 
         if opcion < 1 or opcion > 8:
-            print("##################################")
             print("ingresa un numero valido por favor")
-            print("##################################")
             ingresar_operacion()
 
     except ValueError:
@@ -139,13 +127,13 @@ def realizar_operacion(operacion, session):
         session.close()
 
     if (operacion ==1):
-        agregarAlumno()
+        agegarCurso()
 
     if (operacion ==2):
-        agregarProfesor()
+        agregarCurso()
 
     if (operacion ==3):
-        AsignarAlumnoACurso()
+        agregarProfesor()
 
     if (operacion == 4):
         asignarAlumnoACurso()
@@ -157,7 +145,7 @@ def realizar_operacion(operacion, session):
         asignarHorarioProfCurso()
 
     if (operacion == 7):
-        exportarAlumnosPerteneceACurso(session)
+        exportarAlumnosPerteneceACurso(session):
 
  
 
@@ -169,7 +157,7 @@ def main():
     operacion = 0
     while operacion != 8:
         operacion = ingresar_operacion()
-        realizar_operacion(operacion, session)
+        realizar_operacion(opcion, session)
 
     print ("Gracias por usar nuestro sistema de escuela")
 
