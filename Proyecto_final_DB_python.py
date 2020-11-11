@@ -84,7 +84,7 @@ def agregarCurso():
     print("agregar curso")
 
 def agregarAlumno():
-    #acá tiene que chequear que el profesor no esté en la DB
+    #acá tiene que chequear que el estudiante no esté en la DB
     print ("Agregar Estudiante")
 
 def asignarAlumnoACurso():
