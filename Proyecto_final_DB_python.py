@@ -11,7 +11,7 @@ Base=declarative_base(engine)
 class Estudiante(Base):
     __tablename__="alumno"   
     id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
-    cedula_identidad=Column(String, primary_key=True)
+    cedula_identidad=Column(String)
     nombre_alumno=Column(String)
     apellido_alumno=Column(String)
     curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
@@ -73,7 +73,7 @@ def estaAlumno(Session ses, Estudiante estud):
     
     
 def estaCurso(Session ses, Curso curso):
-    return curso.id == ses.query(Curso,Curso.id).all()
+    return curso.id == ses.query(Curso,Curso.id).any()
 
 
 def agregarProfesor ():
@@ -106,7 +106,7 @@ def exportarAlumnosPerteneceACurso():
 
 ###############################################################################
 #Ésta función es para precargar datos en las DB #
-#Si ne se quiere eso, comente las lineas y listo
+#Si ne se quiere eso, comente la linea que llama a esta función en el main y listo
 def precargarDatos(Session ses):
 ###############ESTUDINTES##################################################
     alumno1=Estudiante(nombre_alumno='Raton', apellido_alumno='Perez',
@@ -122,8 +122,29 @@ def precargarDatos(Session ses):
     ses.add(alumno3)
     ses.add(alumno4)
 ############PROFESORES###################################################
-    
-    
+    prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',
+    cedula_identidad='1234567-9')
+    prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',
+    cedula_identidad='1234567-10')
+    prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',
+    cedula_identidad='1234567-11')
+    ses.add(prof1)
+    ses.add(prof2)
+    ses.add(prof3)
+
+#######################Horarios#######################################
+
+
+
+#######################Cursos#######################################
+    fisica=Curso(nombre_curso="Fisica")
+    quimica=Curso(nombre_curso="Quimica")
+    biologia=Curso(nombre_curso="Biología")
+    ses.add(fisica)
+    ses.add(quimica)
+    ses.add(biologia)
+####################################################################################################
+
 
 #############Funcion que despliega el menú##########################################################
 def impr_op_posibles():
@@ -152,7 +173,9 @@ def ingresar_operacion():
             ingresar_operacion()
 
     except ValueError:
+        print("##################################")
         print("ingresa un numero valido por favor")
+        print("##################################")
         ingresar_operacion()
 
     return opcion
