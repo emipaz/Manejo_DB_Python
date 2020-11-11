@@ -106,6 +106,8 @@ def exportarAlumnosPerteneceACurso():
 #    print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
 #    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
 
+
+
 ###############################################################################
 #Ésta función es para precargar datos en las DB #
 #Si ne se quiere eso, comente la linea que llama a esta función en el main y listo
@@ -145,6 +147,8 @@ def precargarDatos(Session ses):
     ses.add(fisica)
     ses.add(quimica)
     ses.add(biologia)
+    
+    ses.commit()
 ####################################################################################################
 
 
