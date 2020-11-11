@@ -108,6 +108,21 @@ def exportarAlumnosPerteneceACurso():
 #Ésta función es para precargar datos en las DB #
 #Si ne se quiere eso, comente las lineas y listo
 def precargarDatos(Session ses):
+###############ESTUDINTES##################################################
+    alumno1=Estudiante(nombre_alumno='Raton', apellido_alumno='Perez',
+    cedula_identidad='1234567-8')
+    alumno2=Estudiante(nombre_alumno='Hugo', apellido_alumno='Donald',
+    cedula_identidad='abcdef123')
+    alumno3=Estudiante(nombre_alumno='Paco', apellido_alumno='Donald',
+    cedula_identidad='abcdef124')
+    alumno4=Estudiante(nombre_alumno='Luis', apellido_alumno='Donald',
+    cedula_identidad='abcdef125')
+    ses.add(alumno1)
+    ses.add(alumno2)
+    ses.add(alumno3)
+    ses.add(alumno4)
+############PROFESORES###################################################
+    
     
 
 #############Funcion que despliega el menú##########################################################
