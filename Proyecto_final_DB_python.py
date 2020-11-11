@@ -111,22 +111,22 @@ def precargarDatos(Session ses):
 ###############ESTUDINTES##################################################
     alumno1=Estudiante(nombre_alumno='Raton', apellido_alumno='Perez',
     cedula_identidad='1234567-8')
-    alumno2=Estudiante(nombre_alumno='Hugo', apellido_alumno='Donald',
+    alumno2=Estudiante(nombre_alumno='Hugo', apellido_alumno='Donald',\
     cedula_identidad='abcdef123')
-    alumno3=Estudiante(nombre_alumno='Paco', apellido_alumno='Donald',
+    alumno3=Estudiante(nombre_alumno='Paco', apellido_alumno='Donald',\
     cedula_identidad='abcdef124')
-    alumno4=Estudiante(nombre_alumno='Luis', apellido_alumno='Donald',
+    alumno4=Estudiante(nombre_alumno='Luis', apellido_alumno='Donald',\
     cedula_identidad='abcdef125')
     ses.add(alumno1)
     ses.add(alumno2)
     ses.add(alumno3)
     ses.add(alumno4)
 ############PROFESORES###################################################
-    prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',
+    prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',\
     cedula_identidad='1234567-9')
-    prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',
+    prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',\
     cedula_identidad='1234567-10')
-    prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',
+    prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',\
     cedula_identidad='1234567-11')
     ses.add(prof1)
     ses.add(prof2)
