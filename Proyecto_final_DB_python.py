@@ -11,7 +11,7 @@ Base=declarative_base(engine)
 class Estudiante(Base):
     __tablename__="alumno"   
     id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
-    cedula_identidad=Column(Integer, primary_key=True)
+    cedula_identidad=Column(String, primary_key=True)
     nombre_alumno=Column(String)
     apellido_alumno=Column(String)
     curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
@@ -48,7 +48,7 @@ class Horarios(Base):
 class Profesor(Base):
     __tablename__='profesor'
     id=Column(Integer, Sequence('profesor_seq_id'),primary_key=True)
-    cedula_identidad=Column(Integer, primary_key=True)    
+    cedula_identidad=Column(String, primary_key=True)    
     nombre_profesor=Column(String)
     apellido_profesor=Column(String)
     
@@ -105,6 +105,10 @@ def exportarAlumnosPerteneceACurso():
 #    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
 
 ###############################################################################
+#Ésta función es para precargar datos en las DB #
+#Si ne se quiere eso, comente las lineas y listo
+def precargarDatos(Session ses):
+    
 
 #############Funcion que despliega el menú##########################################################
 def impr_op_posibles():
@@ -171,6 +175,7 @@ def main():
     session = Session()
 
     operacion = 0
+    precargarDatos(session)
     while operacion != 8:
         operacion = ingresar_operacion()
         realizar_operacion(operacion, session)
