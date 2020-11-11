@@ -57,6 +57,10 @@ class Profesor(Base):
         return'{}{}'.format(self.nombre_profesor, self.apellido_profesor)
 
 
+Profesor.__table__
+Estudiante.__table__
+Curso.__table__
+Horarios.__table__
 Base.metadata.create_all(engine)
 #########################################################################################
 
