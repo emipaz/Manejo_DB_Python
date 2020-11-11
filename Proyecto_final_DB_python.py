@@ -43,7 +43,8 @@ class Horarios(Base):
     curso_profe=relationship("Profesor",back_populates='profe_curso')
 
     def __repr__(self):
-        return'{}{}{}'.format(self.dia,self.hora_inicio, self.hora_fin)
+        return'{}{}{}'.format(self.dia,self.hora_inicio, self.hora_fin,\
+        self.cedula_identidad)
 
 class Profesor(Base):
     __tablename__='profesor'
@@ -54,7 +55,8 @@ class Profesor(Base):
     
     profe_curso=relationship("Horarios",back_populates='curso_profe')
     def __repr__(self):
-        return'{}{}'.format(self.nombre_profesor, self.apellido_profesor)
+        return'{}{}{}'.format(self.nombre_profesor, self.apellido_profesor,\
+        self.cedula_identidad)
 
 
 Profesor.__table__
@@ -123,7 +125,7 @@ def precargarDatos(Session ses):
     ses.add(alumno4)
 ############PROFESORES###################################################
     prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',\
-    cedula_identidad='1234567-9')
+    cedula_identidad='1234567-9',)
     prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',\
     cedula_identidad='1234567-10')
     prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',\
