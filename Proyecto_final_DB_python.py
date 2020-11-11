@@ -11,7 +11,7 @@ Base=declarative_base(engine)
 class Estudiante(Base):
     __tablename__="alumno"   
     id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
-    CI=Column(Integer, primary_key=True)
+    cedula_identidad=Column(Integer, primary_key=True)
     nombre_alumno=Column(String)
     apellido_alumno=Column(String)
     curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
@@ -48,7 +48,7 @@ class Horarios(Base):
 class Profesor(Base):
     __tablename__='profesor'
     id=Column(Integer, Sequence('profesor_seq_id'),primary_key=True)
-    CI=Column(Integer, primary_key=True)    
+    cedula_identidad=Column(Integer, primary_key=True)    
     nombre_profesor=Column(String)
     apellido_profesor=Column(String)
     
@@ -62,14 +62,14 @@ Base.metadata.create_all(engine)
 
 ##############Definiciones de cada funcion################################
 def estaProfesor(Session ses, Profesor prof):
-    return prof.CI == ses.query(Profesor, Profesor.CI).any()
+    return prof.cedula_identidad == ses.query(Profesor, Profesor.cedula_identidad).all()
     
 def estaAlumno(Session ses, Estudiante estud):
-    return estud.CI == ses.query(Estudiante, Estudiante.CI).any()
+    return estud.cedula_identidad == ses.query(Estudiante, Estudiante.cedula_identidad).all()
     
     
 def estaCurso(Session ses, Curso curso):
-    return curso.id == ses.query(Curso,Curso.id).any()
+    return curso.id == ses.query(Curso,Curso.id).all()
 
 
 def agregarProfesor ():
