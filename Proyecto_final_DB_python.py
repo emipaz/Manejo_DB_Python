@@ -5,55 +5,51 @@ from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 
 ###############Creación de la base de datos #########################################
-engine=create_engine('sqlite:///:memory:')
-Base=declarative_base(engine)
+engine  = create_engine('sqlite:///:memory:')
+Base    = declarative_base(engine)
 
 class Estudiante(Base):
-    __tablename__="alumno"   
-    id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
-    cedula_identidad=Column(String)
-    nombre_alumno=Column(String)
-    apellido_alumno=Column(String)
-    curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
-    
-    cursos=relationship("Curso",back_populates='estudiantes')
+    __tablename__    = "alumno"
+    id               = Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
+    cedula_identidad = Column(String)
+    nombre_alumno    = Column(String)
+    apellido_alumno  = Column(String)
+    curso_idAlumno   = Column(Integer,ForeignKey('curso.id'))
+    cursos           = relationship("Curso",back_populates='estudiantes')
     def __repr__(self):
         return'{}{}'.format(self.nombre_alumno, self.apellido_alumno)
 
 class Curso(Base):
     __tablename__='curso'
-    id=Column(Integer, Sequence('curso_seq_id'),primary_key=True)
-    nombre_curso=Column(String)
-        
-    estudiantes=relationship("Estudiante",back_populates='cursos')
-    hora_curso=relationship("Horarios",back_populates='curso_hora')
+    id           = Column(Integer, Sequence('curso_seq_id'),primary_key=True)
+    nombre_curso = Column(String)
+    estudiantes  = relationship("Estudiante",back_populates='cursos')
+    hora_curso   = relationship("Horarios",back_populates='curso_hora')
     def __repr__(self):
         return'{}'.format(self.nombre_curso)
 
 class Horarios(Base):
     __tablename__='horario'
-    id=Column(Integer, Sequence('horario_seq_id'),primary_key=True)
-    dia=Column(String)
-    hora_inicio=Column(String)
-    hora_fin=Column(String)
-    profesor_id=Column(Integer,ForeignKey('profesor.id'))
-    curso_id=Column(Integer,ForeignKey('curso.id'))
-    
-    curso_hora=relationship("Curso",back_populates='hora_curso')
-    curso_profe=relationship("Profesor",back_populates='profe_curso')
+    id           =  Column(Integer, Sequence('horario_seq_id'),primary_key=True)
+    dia          = Column(String)
+    hora_inicio  = Column(String)
+    hora_fin     = Column(String)
+    profesor_id  = Column(Integer,ForeignKey('profesor.id'))
+    curso_id     = Column(Integer,ForeignKey('curso.id'))
+    curso_hora   = relationship("Curso",back_populates='hora_curso')
+    curso_profe  = relationship("Profesor",back_populates='profe_curso')
 
     def __repr__(self):
         return'{}{}{}'.format(self.dia,self.hora_inicio, self.hora_fin,\
         self.cedula_identidad)
 
 class Profesor(Base):
-    __tablename__='profesor'
-    id=Column(Integer, Sequence('profesor_seq_id'),primary_key=True)
-    cedula_identidad=Column(String, primary_key=True)    
-    nombre_profesor=Column(String)
-    apellido_profesor=Column(String)
-    
-    profe_curso=relationship("Horarios",back_populates='curso_profe')
+    __tablename__     = 'profesor'
+    id                = Column(Integer, Sequence('profesor_seq_id'), primary_key = True)
+    cedula_identidad  = Column(String) #.primary_key = True)    
+    nombre_profesor   = Column(String)
+    apellido_profesor = Column(String)
+    profe_curso       = relationship("Horarios",back_populates='curso_profe')
     def __repr__(self):
         return'{}{}{}'.format(self.nombre_profesor, self.apellido_profesor,\
         self.cedula_identidad)
@@ -71,10 +67,9 @@ def estaProfesor(ses, identidad, nombre, apellido):
     if ses.query(Profesor).filter(Profesor.cedula_identidad == identidad):
         print("El estudiante ya se encuentra en la base de datos:")
         return True
-    
+
     elif ses.query(Profesor).filter(Profesor.nombre_profesor == nombre) and ses.query(Profesor).filter(Profesor.apellido_profesor == apellido):
-    
-    
+
         print("El estudiante ya se encuentra en la base de datos:")
         print ( ses.query(Estudiante).Estudiante(cedula_identidad.any()).all())
         return True
@@ -82,6 +77,7 @@ def estaProfesor(ses, identidad, nombre, apellido):
         return False
     
 def estaAlumno(ses, identidad, nombre, apellido):
+    #print(ses, identidad, nombre, apellido)
     if ses.query(Estudiante).filter(Estudiante.cedula_identidad == identidad):
         print("El estudiante ya se encuentra en la base de datos:")
         return True
@@ -94,40 +90,64 @@ def estaAlumno(ses, identidad, nombre, apellido):
     
     
 def estaCurso(ses, nom_curso):
-    query = ses.query(Curso).filter(Curso.nombre_curso == nom_curso).one().lower()
-    return nom_curso.lower() == query
+    print(ses.query( Curso ).filter ( Curso.nombre_curso == nom_curso ))
+
+    query = ses.query( Curso ).filter ( Curso.nombre_curso == nom_curso ).all()
+    
+    print("hola soy el querry",query)
+    print("hola soy el curso",nom_curso.lower())
+
+    for i in query:
+        print(i,type(i))
+        print( nom_curso.lower(),type(nom_curso))
+        print("es este",nom_curso.lower() == i)
+        a = (nom_curso.lower())
+
+        if nom_curso.lower() == str(i):
+            break
+    else:
+        print(False)
+        return False
+    print(True)
+    return True
+    
+    #return nom_curso.lower() == query
 
 
 def agregarProfesor (ses):
-    identidad= String(input("Ingrese el numero de identidad del profesor:"))
-    nombre = String(input("Ingrese Solo el Nombre del Profesor:"))
-    apellido = String(input("Ingrese solo el Apellido del Profesor:"))
+    identidad  = String(input("Ingrese el numero de identidad del profesor:"))
+    nombre     = String(input("Ingrese Solo el Nombre del Profesor:"))
+    apellido   = String(input("Ingrese solo el Apellido del Profesor:"))
     if estaProfesor(ses, identidad, nombre, apellido):
-        prof_nuevo = Profesor(nombre_profesor=nombre, apellido_profesor=apellido,\
-                              cedula_identidad=identidad)
+        prof_nuevo = Profesor(nombre_profesor   = nombre, 
+                              apellido_profesor = apellido,\
+                              cedula_identidad  = identidad)
 
         ses.add(prof_nuevo)
         ses.commit()
 
 
 def agregarCurso(ses):
-    nombre_cur= String(input("Ingrese el nombre del curso:"))
-    if estaCurso(ses, nombre_cur):
-          curso_nuevo = Curso(nombre_curso=nombre_cur)
+    nombre_cur = input("Ingrese el nombre del curso:")
+    print(nombre_cur,type(nombre_cur))
+    if not estaCurso(ses, nombre_cur):
+          curso_nuevo = Curso(nombre_curso = nombre_cur)
           #acá hace falta agregar los horarios
-          
           ses.add(curso_nuevo)
           ses.commit()
     else:
           print("El curso {} ya existe".format(nombre_cur))
 
 def agregarAlumno(ses):
-    identidad= String(input("Ingrese el numero de identidad del estudiante:"))
-    nombre = String(input("Ingrese Solo el Nombre del Estudiante:"))
-    apellido = String(input("Ingrese solo el Apellido del Estudiante:"))
+    identidad = input("Ingrese el numero de identidad del estudiante:")
+    print(identidad)
+    nombre    = input("Ingrese Solo el Nombre del Estudiante:")
+    apellido  = input("Ingrese solo el Apellido del Estudiante:")
+    print(estaAlumno(ses, identidad, nombre, apellido))
     if estaAlumno(ses, identidad, nombre, apellido):
-        estud_nuevo = Estudiante(nombre_estudiante=nombre, apellido_estudiante=apellido,\
-                              cedula_identidad=identidad)
+        estud_nuevo = Estudiante(nombre_alumno       = nombre,
+                                 apellido_alumno     = apellido,
+                                 cedula_identidad    = identidad)
         ses.add(estud_nuevo)
         ses.commit()
 
@@ -155,25 +175,32 @@ def exportarAlumnosPerteneceACurso(ses):
 #Si ne se quiere eso, comente la linea que llama a esta función en el main y listo
 def precargarDatos(ses):
 ###############ESTUDINTES##################################################
-    alumno1=Estudiante(nombre_alumno='Raton', apellido_alumno='Perez',
-    cedula_identidad='1234567-8')
-    alumno2=Estudiante(nombre_alumno='Hugo', apellido_alumno='Donald',\
-    cedula_identidad='abcdef123')
-    alumno3=Estudiante(nombre_alumno='Paco', apellido_alumno='Donald',\
-    cedula_identidad='abcdef124')
-    alumno4=Estudiante(nombre_alumno='Luis', apellido_alumno='Donald',\
-    cedula_identidad='abcdef125')
+    alumno1 = Estudiante(nombre_alumno    = 'Raton', 
+                         apellido_alumno  = 'Perez',
+                         cedula_identidad = '1234567-8')
+    alumno2 = Estudiante(nombre_alumno    = 'Hugo', 
+                         apellido_alumno  = 'Donald',\
+                         cedula_identidad = 'abcdef123')
+    alumno3 = Estudiante(nombre_alumno    = 'Paco', 
+                         apellido_alumno  = 'Donald',\
+                         cedula_identidad = 'abcdef124')
+    alumno4 = Estudiante(nombre_alumno    = 'Luis', 
+                         apellido_alumno  = 'Donald',\
+                        cedula_identidad  = 'abcdef125')
     ses.add(alumno1)
     ses.add(alumno2)
     ses.add(alumno3)
     ses.add(alumno4)
 ############PROFESORES###################################################
-    prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',\
-    cedula_identidad='1234567-9')
-    prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',\
-    cedula_identidad='1234567-10')
-    prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',\
-    cedula_identidad='1234567-11')
+    prof1 = Profesor(nombre_profesor   = 'Profesor1', 
+                     apellido_profesor = 'El 1',
+                     cedula_identidad  = '1234567-9')
+    prof2 = Profesor(nombre_profesor   = 'Profesor1', 
+                     apellido_profesor = 'El 2',
+                     cedula_identidad  = '1234567-10')
+    prof3 = Profesor(nombre_profesor   = 'Profesor3', 
+                     apellido_profesor = 'El 3',\
+                     cedula_identidad  = '1234567-11')
     ses.add(prof1)
     ses.add(prof2)
     ses.add(prof3)
@@ -183,9 +210,9 @@ def precargarDatos(ses):
 
 
 #######################Cursos#######################################
-    fisica=Curso(nombre_curso="Fisica")
-    quimica=Curso(nombre_curso="Quimica")
-    biologia=Curso(nombre_curso="Biología")
+    fisica   = Curso( nombre_curso = "Fisica")
+    quimica  = Curso( nombre_curso = "Quimica")
+    biologia = Curso( nombre_curso = "Biología")
     ses.add(fisica)
     ses.add(quimica)
     ses.add(biologia)
@@ -236,7 +263,7 @@ def realizar_operacion(operacion, session):
         agregarAlumno(session)
 
     if (operacion ==2):
-        agregarProfesor(session)
+        agregarCurso(session)
 
     if (operacion ==3):
         AsignarAlumnoACurso(session)
