@@ -67,30 +67,70 @@ Base.metadata.create_all(engine)
 #########################################################################################
 
 ##############Definiciones de cada funcion################################
-def estaProfesor(Session ses, Profesor prof):
-    return prof.cedula_identidad == ses.query(Profesor, Profesor.cedula_identidad).all()
+def estaProfesor(Session ses, String identidad, String nombre, String apellido):
+    if ses.query(Profesor).filter(Profesor.cedula_identidad == identidad):
+        print("El estudiante ya se encuentra en la base de datos:")
+        return True
+    elif (ses.query(Profesor).filter(Profesor.nombre_profesor == nombre) and ses.query(Profesor).filter(Profesor.apellido_profesor == apellido)
+        print("El estudiante ya se encuentra en la base de datos:")
+        print(ses.query(Estudiante).Estudiante(cedula_identidad.any()).all())
+        return True
+    else:
+        return False
     
-def estaAlumno(Session ses, Estudiante estud):
-    return estud.cedula_identidad == ses.query(Estudiante, Estudiante.cedula_identidad).all()
+def estaAlumno(Session ses, String identidad, String nombre, String apellido):
+    if ses.query(Estudiante).filter(Estudiante.cedula_identidad == identidad):
+        print("El estudiante ya se encuentra en la base de datos:")
+        return True
+    elif (ses.query(Estudiante).filter(Estudiante.nombre_alumno == nombre) and ses.query(Estudiante).filter(Estudiante.apellido_alumno == apellido)
+        print("El estudiante ya se encuentra en la base de datos:")
+        print(ses.query(Estudiante).Estudiante(cedula_identidad.any()).all())
+        return True
+    else:
+        return False
     
     
-def estaCurso(Session ses, Curso curso):
-    return curso.id == ses.query(Curso,Curso.id).any()
+def estaCurso(Session ses, String nom_curso):
+    query = ses.query(Curso).filter(Curso.nombre_curso == nom_curso).one().lower()
+    return nom_curso.lower() == query
 
 
-def agregarProfesor ():
-    #acá tiene que chequear que el profesor no esté en la DB
-    print ("Agregar Profesor")
+def agregarProfesor (Session ses):
+    identidad= String(input("Ingrese el numero de identidad del profesor:"))
+    nombre = String(input("Ingrese Solo el Nombre del Profesor:"))
+    apellido = String(input("Ingrese solo el Apellido del Profesor:"))
+    if !estaProfesor(ses, identidad, nombre, apellido):
+        prof_nuevo = Profesor(nombre_profesor=nombre, apellido_profesor=apellido,\
+                              cedula_identidad=identidad)
 
-def agregarCurso():
-    print("agregar curso")
+        ses.add(prof_nuevo)
+        ses.commit()
+        
+            
 
-def agregarAlumno():
-    #acá tiene que chequear que el estudiante no esté en la DB
-    print ("Agregar Estudiante")
+def agregarCurso(Sessinon ses):
+    nombre_cur= String(input("Ingrese el nombre del curso:"))
+    if !estaCurso(ses, nombre_cur):
+          curso_nuevo = Curso(nombre_curso=nombre_cur)
+          #acá hace falta agregar los horarios
+          
+          ses.add(curso_nuevo)
+          ses.commit()
+    else:
+          print("El curso {} ya existe".format(nombre_cur))
 
-def asignarAlumnoACurso():
-#algo aca
+def agregarAlumno(Sessinon ses):
+    identidad= String(input("Ingrese el numero de identidad del estudiante:"))
+    nombre = String(input("Ingrese Solo el Nombre del Estudiante:"))
+    apellido = String(input("Ingrese solo el Apellido del Estudiante:"))
+    if !estaAlumno(ses, identidad, nombre, apellido):
+        estud_nuevo = Estudiante(nombre_estudiante=nombre, apellido_estudiante=apellido,\
+                              cedula_identidad=identidad)
+        ses.add(estud_nuevo)
+        ses.commit()
+
+def asignarAlumnoACurso(Sessinon ses):
+    
     print("Asignar estudiante a curso")
 
 def asignarProfesorACurso():
@@ -101,10 +141,10 @@ def asignarHorarioProfCurso():
     return None
 
 
-def exportarAlumnosPerteneceACurso():
-    print ("Exportar alumnos pertenecientes a curso")
-#    print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
-#    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
+def exportarAlumnosPerteneceACurso(Sessinon ses):
+    for curso in session.query(Curso).filter(Profesor.profe_curso.any()).all():
+        print("Nombre del curso:" + curso)
+    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
 
 
 
@@ -127,7 +167,7 @@ def precargarDatos(Session ses):
     ses.add(alumno4)
 ############PROFESORES###################################################
     prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',\
-    cedula_identidad='1234567-9',)
+    cedula_identidad='1234567-9')
     prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',\
     cedula_identidad='1234567-10')
     prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',\
@@ -191,22 +231,22 @@ def realizar_operacion(operacion, session):
         session.close()
 
     if (operacion ==1):
-        agregarAlumno()
+        agregarAlumno(session)
 
     if (operacion ==2):
-        agregarProfesor()
+        agregarProfesor(session)
 
     if (operacion ==3):
-        AsignarAlumnoACurso()
+        AsignarAlumnoACurso(session)
 
     if (operacion == 4):
-        asignarAlumnoACurso()
+        asignarAlumnoACurso(session)
 
     if (operacion == 5):
-        asignarProfesorACurso()
+        asignarProfesorACurso(session)
 
     if (operacion == 6):
-        asignarHorarioProfCurso()
+        asignarHorarioProfCurso(session)
 
     if (operacion == 7):
         exportarAlumnosPerteneceACurso(session)

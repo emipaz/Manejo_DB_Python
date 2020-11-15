@@ -11,6 +11,7 @@ Base=declarative_base(engine)
 class Estudiante(Base):
     __tablename__="alumno"   
     id=Column(Integer,Sequence('alumno_seq_id'),primary_key=True)
+    cedula_identidad=Column(String)
     nombre_alumno=Column(String)
     apellido_alumno=Column(String)
     curso_idAlumno=Column(Integer,ForeignKey('curso.id'))
@@ -42,55 +43,157 @@ class Horarios(Base):
     curso_profe=relationship("Profesor",back_populates='profe_curso')
 
     def __repr__(self):
-        return'{}{}{}'.format(self.dia,self.hora_inicio, self.hora_fin)
+        return'{}{}{}'.format(self.dia,self.hora_inicio, self.hora_fin,\
+        self.cedula_identidad)
 
 class Profesor(Base):
     __tablename__='profesor'
     id=Column(Integer, Sequence('profesor_seq_id'),primary_key=True)
+    cedula_identidad=Column(String, primary_key=True)    
     nombre_profesor=Column(String)
     apellido_profesor=Column(String)
     
     profe_curso=relationship("Horarios",back_populates='curso_profe')
     def __repr__(self):
-        return'{}{}'.format(self.nombre_profesor, self.apellido_profesor)
+        return'{}{}{}'.format(self.nombre_profesor, self.apellido_profesor,\
+        self.cedula_identidad)
 
 
+Profesor.__table__
+Estudiante.__table__
+Curso.__table__
+Horarios.__table__
 Base.metadata.create_all(engine)
 #########################################################################################
 
 ##############Definiciones de cada funcion################################
-def estaProfesor():
-def estaAlumno():
-def estaCurso():
+def estaProfesor(Session ses, String identidad, String nombre, String apellido):
+     if (identidad == ses.query(Profesor.cedula_identidad).all()):
+        print("El profesor ya se encuentra en la base de datos:")
+        print(ses.query(Profesor.cedula_identidad.any()).all())
+        return True
+    elif (nombre == ses.query(Profesor.nombre_profesor.any())&&\
+        apellido==ses.query(Profesor.apellido_profesor.any()):
+        print("El profesor ya se encuentra en la base de datos:")
+        print(ses.query(Profesor.cedula_identidad.any()).all())
+        return True
+    else:
+        return False
+    
+def estaAlumno(Session ses, String identidad, String nombre, String apellido):
+    if (identidad == ses.query(Estudiante.cedula_identidad).all()):
+        print("El estudiante ya se encuentra en la base de datos:")
+        print(ses.query(Profesor.cedula_identidad.any()).all())
+        return True
+    elif (nombre == ses.query(Estudiante.nombre_estudiante.any())&&\
+        apellido==ses.query(Estudiante.apellido_estudiante.any()):
+        print("El estudiante ya se encuentra en la base de datos:")
+        print(ses.query(Estudiante.cedula_identidad.any()).all())
+        return True
+    else:
+        return False
+    
+    
+def estaCurso(Session ses, String nom_curso):
+    return nom_curso.lower() == ses.query(Curso,Curso.nombre_curso).any().lower()
 
 
-def agregarProfesor (Session sesion, Profesor profe):
-    #acá tiene que chequear que el profesor no esté en la DB
+def agregarProfesor (Session ses):
+    identidad= String(input("Ingrese el numero de identidad del profesor:"))
+    nombre = String(input("Ingrese Solo el Nombre del Profesor:"))
+    apellido = String(input("Ingrese solo el Apellido del Profesor:"))
+    if !estaProfesor(ses, identidad, nombre, apellido):
+        prof_nuevo = Profesor(nombre_profesor=nombre, apellido_profesor=apellido,\
+                              cedula_identidad=identidad)
 
+        ses.add(prof_nuevo)
+        ses.commit()
+        
+            
 
+def agregarCurso(Sessinon ses):
+    nombre_cur= String(input("Ingrese el nombre del curso:"))
+    if !estaCurso(ses, nombre_cur):
+          curso_nuevo = Curso(nombre_curso=nombre_cur)
+          
+          
+          ses.add(curso_nuevo)
+          ses.commit()
+    else:
+          print("El curso {} ya existe".format(nombre_cur))
 
-
-def agregarAlumno(Session sesion, Estudiante alumno):
-    #acá tiene que chequear que el profesor no esté en la DB
+def agregarAlumno(Sessinon ses):
+    identidad= String(input("Ingrese el numero de identidad del estudiante:"))
+    nombre = String(input("Ingrese Solo el Nombre del Estudiante:"))
+    apellido = String(input("Ingrese solo el Apellido del Estudiante:"))
+    if !estaAlumno(ses, identidad, nombre, apellido):
+        estud_nuevo = Estudiante(nombre_estudiante=nombre, apellido_estudiante=apellido,\
+                              cedula_identidad=identidad)
+        ses.add(estud_nuevo)
+        ses.commit()
 
 def asignarAlumnoACurso():
 #algo aca
+    print("Asignar estudiante a curso")
 
 def asignarProfesorACurso():
-#algo aca
-
-def asignarProfesorACurso():
+    print("Asignar profesor a curso")
 #algo aca
 
 def asignarHorarioProfCurso():
+    return None
 
 
+def exportarAlumnosPerteneceACurso():
+    print ("Exportar alumnos pertenecientes a curso")
+#    print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
+#    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
 
-def exportarAlumnosPerteneceACurso(Session session):
-    print(session.query(Curso).filter(Profesor.profe_curso.any()).all())
-    print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
+
 
 ###############################################################################
+#Ésta función es para precargar datos en las DB #
+#Si ne se quiere eso, comente la linea que llama a esta función en el main y listo
+def precargarDatos(Session ses):
+###############ESTUDINTES##################################################
+    alumno1=Estudiante(nombre_alumno='Raton', apellido_alumno='Perez',
+    cedula_identidad='1234567-8')
+    alumno2=Estudiante(nombre_alumno='Hugo', apellido_alumno='Donald',\
+    cedula_identidad='abcdef123')
+    alumno3=Estudiante(nombre_alumno='Paco', apellido_alumno='Donald',\
+    cedula_identidad='abcdef124')
+    alumno4=Estudiante(nombre_alumno='Luis', apellido_alumno='Donald',\
+    cedula_identidad='abcdef125')
+    ses.add(alumno1)
+    ses.add(alumno2)
+    ses.add(alumno3)
+    ses.add(alumno4)
+############PROFESORES###################################################
+    prof1= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 1',\
+    cedula_identidad='1234567-9')
+    prof2= Profesor(nombre_profesor='Profesor1', apellido_profesor='El 2',\
+    cedula_identidad='1234567-10')
+    prof1= Profesor(nombre_profesor='Profesor3', apellido_profesor='El 3',\
+    cedula_identidad='1234567-11')
+    ses.add(prof1)
+    ses.add(prof2)
+    ses.add(prof3)
+
+#######################Horarios#######################################
+
+
+
+#######################Cursos#######################################
+    fisica=Curso(nombre_curso="Fisica")
+    quimica=Curso(nombre_curso="Quimica")
+    biologia=Curso(nombre_curso="Biología")
+    ses.add(fisica)
+    ses.add(quimica)
+    ses.add(biologia)
+    
+    ses.commit()
+####################################################################################################
+
 
 #############Funcion que despliega el menú##########################################################
 def impr_op_posibles():
@@ -113,11 +216,15 @@ def ingresar_operacion():
         opcion = int(input("Elije una opcion (con numeros)"))
 
         if opcion < 1 or opcion > 8:
+            print("##################################")
             print("ingresa un numero valido por favor")
+            print("##################################")
             ingresar_operacion()
 
     except ValueError:
+        print("##################################")
         print("ingresa un numero valido por favor")
+        print("##################################")
         ingresar_operacion()
 
     return opcion
@@ -127,13 +234,13 @@ def realizar_operacion(operacion, session):
         session.close()
 
     if (operacion ==1):
-        agegarCurso()
+        agregarAlumno()
 
     if (operacion ==2):
-        agregarCurso()
+        agregarProfesor()
 
     if (operacion ==3):
-        agregarProfesor()
+        AsignarAlumnoACurso()
 
     if (operacion == 4):
         asignarAlumnoACurso()
@@ -145,7 +252,7 @@ def realizar_operacion(operacion, session):
         asignarHorarioProfCurso()
 
     if (operacion == 7):
-        exportarAlumnosPerteneceACurso(session):
+        exportarAlumnosPerteneceACurso(session)
 
  
 
@@ -155,9 +262,10 @@ def main():
     session = Session()
 
     operacion = 0
+    precargarDatos(session)
     while operacion != 8:
         operacion = ingresar_operacion()
-        realizar_operacion(opcion, session)
+        realizar_operacion(operacion, session)
 
     print ("Gracias por usar nuestro sistema de escuela")
 
