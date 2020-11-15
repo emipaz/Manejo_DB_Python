@@ -67,22 +67,25 @@ Base.metadata.create_all(engine)
 #########################################################################################
 
 ##############Definiciones de cada funcion################################
-def estaProfesor(Session ses, String identidad, String nombre, String apellido):
+def estaProfesor(ses, identidad, nombre, apellido):
     if ses.query(Profesor).filter(Profesor.cedula_identidad == identidad):
         print("El estudiante ya se encuentra en la base de datos:")
         return True
-    elif (ses.query(Profesor).filter(Profesor.nombre_profesor == nombre) and ses.query(Profesor).filter(Profesor.apellido_profesor == apellido)
+    
+    elif ses.query(Profesor).filter(Profesor.nombre_profesor == nombre) and ses.query(Profesor).filter(Profesor.apellido_profesor == apellido):
+    
+    
         print("El estudiante ya se encuentra en la base de datos:")
-        print(ses.query(Estudiante).Estudiante(cedula_identidad.any()).all())
+        print ( ses.query(Estudiante).Estudiante(cedula_identidad.any()).all())
         return True
     else:
         return False
     
-def estaAlumno(Session ses, String identidad, String nombre, String apellido):
+def estaAlumno(ses, identidad, nombre, apellido):
     if ses.query(Estudiante).filter(Estudiante.cedula_identidad == identidad):
         print("El estudiante ya se encuentra en la base de datos:")
         return True
-    elif (ses.query(Estudiante).filter(Estudiante.nombre_alumno == nombre) and ses.query(Estudiante).filter(Estudiante.apellido_alumno == apellido)
+    elif ses.query(Estudiante).filter(Estudiante.nombre_alumno == nombre) and ses.query(Estudiante).filter(Estudiante.apellido_alumno == apellido):
         print("El estudiante ya se encuentra en la base de datos:")
         print(ses.query(Estudiante).Estudiante(cedula_identidad.any()).all())
         return True
@@ -90,12 +93,12 @@ def estaAlumno(Session ses, String identidad, String nombre, String apellido):
         return False
     
     
-def estaCurso(Session ses, String nom_curso):
+def estaCurso(ses, nom_curso):
     query = ses.query(Curso).filter(Curso.nombre_curso == nom_curso).one().lower()
     return nom_curso.lower() == query
 
 
-def agregarProfesor (Session ses):
+def agregarProfesor (ses):
     identidad= String(input("Ingrese el numero de identidad del profesor:"))
     nombre = String(input("Ingrese Solo el Nombre del Profesor:"))
     apellido = String(input("Ingrese solo el Apellido del Profesor:"))
