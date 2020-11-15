@@ -102,18 +102,17 @@ def agregarProfesor (ses):
     identidad= String(input("Ingrese el numero de identidad del profesor:"))
     nombre = String(input("Ingrese Solo el Nombre del Profesor:"))
     apellido = String(input("Ingrese solo el Apellido del Profesor:"))
-    if !estaProfesor(ses, identidad, nombre, apellido):
+    if estaProfesor(ses, identidad, nombre, apellido):
         prof_nuevo = Profesor(nombre_profesor=nombre, apellido_profesor=apellido,\
                               cedula_identidad=identidad)
 
         ses.add(prof_nuevo)
         ses.commit()
-        
-            
 
-def agregarCurso(Sessinon ses):
+
+def agregarCurso(ses):
     nombre_cur= String(input("Ingrese el nombre del curso:"))
-    if !estaCurso(ses, nombre_cur):
+    if estaCurso(ses, nombre_cur):
           curso_nuevo = Curso(nombre_curso=nombre_cur)
           #acá hace falta agregar los horarios
           
@@ -122,17 +121,17 @@ def agregarCurso(Sessinon ses):
     else:
           print("El curso {} ya existe".format(nombre_cur))
 
-def agregarAlumno(Sessinon ses):
+def agregarAlumno(ses):
     identidad= String(input("Ingrese el numero de identidad del estudiante:"))
     nombre = String(input("Ingrese Solo el Nombre del Estudiante:"))
     apellido = String(input("Ingrese solo el Apellido del Estudiante:"))
-    if !estaAlumno(ses, identidad, nombre, apellido):
+    if estaAlumno(ses, identidad, nombre, apellido):
         estud_nuevo = Estudiante(nombre_estudiante=nombre, apellido_estudiante=apellido,\
                               cedula_identidad=identidad)
         ses.add(estud_nuevo)
         ses.commit()
 
-def asignarAlumnoACurso(Sessinon ses):
+def asignarAlumnoACurso(ses):
     
     print("Asignar estudiante a curso")
 
@@ -144,7 +143,7 @@ def asignarHorarioProfCurso():
     return None
 
 
-def exportarAlumnosPerteneceACurso(Sessinon ses):
+def exportarAlumnosPerteneceACurso(ses):
     for curso in session.query(Curso).filter(Profesor.profe_curso.any()).all():
         print("Nombre del curso:" + curso)
     print(session.query(Horarios).filter(Profesor.profe_curso.any()).all())
@@ -154,7 +153,7 @@ def exportarAlumnosPerteneceACurso(Sessinon ses):
 ###############################################################################
 #Ésta función es para precargar datos en las DB #
 #Si ne se quiere eso, comente la linea que llama a esta función en el main y listo
-def precargarDatos(Session ses):
+def precargarDatos(ses):
 ###############ESTUDINTES##################################################
     alumno1=Estudiante(nombre_alumno='Raton', apellido_alumno='Perez',
     cedula_identidad='1234567-8')
