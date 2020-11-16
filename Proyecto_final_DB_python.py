@@ -5,7 +5,8 @@ from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 
 ###############Creación de la base de datos #########################################
-engine  = create_engine('sqlite:///:memory:')
+#engine  = create_engine('sqlite:///:memory:')
+engine  = create_engine('sqlite:///jenny.db')
 Base    = declarative_base(engine)
 
 class Estudiante(Base):
@@ -29,19 +30,19 @@ class Curso(Base):
         return'{}'.format(self.nombre_curso)
 
 class Horarios(Base):
-    __tablename__='horario'
+    __tablename__= 'horario'
     id           =  Column(Integer, Sequence('horario_seq_id'),primary_key=True)
-    dia          = Column(String)
-    hora_inicio  = Column(String)
-    hora_fin     = Column(String)
-    profesor_id  = Column(Integer,ForeignKey('profesor.id'))
-    curso_id     = Column(Integer,ForeignKey('curso.id'))
-    curso_hora   = relationship("Curso",back_populates='hora_curso')
-    curso_profe  = relationship("Profesor",back_populates='profe_curso')
+    dia          =  Column(String)
+    #hora_inicio  =  Column(String)
+    #hora_fin     =  Column(String)
+    turno        =  Column(String)
+    profesor_id  =  Column(Integer,ForeignKey('profesor.id'))
+    curso_id     =  Column(Integer,ForeignKey('curso.id'))
+    curso_hora   =  relationship("Curso",back_populates='hora_curso')
+    curso_profe  =  relationship("Profesor",back_populates='profe_curso')
 
     def __repr__(self):
-        return'{}{}{}'.format(self.dia,self.hora_inicio, self.hora_fin,\
-        self.cedula_identidad)
+        return'{}'.format(self.id)
 
 class Profesor(Base):
     __tablename__     = 'profesor'
@@ -75,7 +76,7 @@ def estaProfesor(ses, identidad, nombre, apellido):
         return True
     else:
         return False
-    
+
 def estaAlumno(ses, identidad, nombre, apellido):
     #print(ses, identidad, nombre, apellido)
     if ses.query(Estudiante).filter(Estudiante.cedula_identidad == identidad):
@@ -126,13 +127,39 @@ def agregarProfesor (ses):
         ses.add(prof_nuevo)
         ses.commit()
 
+def generarHorarioCurso(ses):
+    dias   = "Lunes Martes Miercoles Jueves Viernes".split()
+    turnos = "Mañana Tarde Noche".split()
+    print(*dias,sep="\n")
+    dia_curso = ""
+    while dia_curso.capitalize() not in dias:
+        dia_curso = input("Ingrese el dia del curso:")
+
+    print(*turnos,sep="\n")
+    turno_curso = ""
+    while turno_curso.capitalize() not in turnos:
+        turno_curso = input("Ingrese el turno del curso:")
+    nuevo_turno = Horarios(turno=turno_curso,dia=dia_curso)
+    ses.add(nuevo_turno)
+    ses.commit()
+    print(nuevo_turno)
+    return(nuevo_turno)
+    #ses.add(nuevo_turno)
+    #ses.commit()
+
 
 def agregarCurso(ses):
     nombre_cur = input("Ingrese el nombre del curso:")
     print(nombre_cur,type(nombre_cur))
     if not estaCurso(ses, nombre_cur):
-          curso_nuevo = Curso(nombre_curso = nombre_cur)
+          #curso_nuevo = Curso(nombre_curso = nombre_cur)
           #acá hace falta agregar los horarios
+          #print(generarHorarioCurso(ses))
+          nuevohorario = generarHorarioCurso(ses)
+          print(nuevohorario)
+          curso_nuevo = Curso(nombre_curso = nombre_cur, hora_curso = nuevohorario.id )
+          
+          
           ses.add(curso_nuevo)
           ses.commit()
     else:
